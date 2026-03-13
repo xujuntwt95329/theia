@@ -86,11 +86,12 @@ export class DebugVariablesWidget extends SourceTreeWidget {
 
     protected handleDidFocusStackFrame(stackFrame: DebugStackFrame | undefined): void {
         if (this.stackFrame !== stackFrame) {
-            if (this.stackFrame) {
-                const sessionState = this.getOrCreateSessionState(this.stackFrame.session);
-                sessionState.setStateForStackFrame(this.stackFrame, this.superStoreState());
+            const previousFrame = this.stackFrame;
+            if (previousFrame) {
+                const sessionState = this.getOrCreateSessionState(previousFrame.session);
+                sessionState.setStateForStackFrame(previousFrame, this.superStoreState());
             }
-            if (stackFrame) {
+            if (stackFrame && (!previousFrame || previousFrame.id !== stackFrame.id)) {
                 const sessionState = this.statePerSession.get(stackFrame.session.id);
                 if (sessionState) {
                     const state = sessionState.getStateForStackFrame(stackFrame);
