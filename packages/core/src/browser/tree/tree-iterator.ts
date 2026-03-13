@@ -128,16 +128,8 @@ export class TopDownTreeIterator extends AbstractTreeIterator {
     protected iterator(root: TreeNode): IterableIterator<TreeNode> {
         const doNext = this.doNext.bind(this);
         return (function* (): IterableIterator<TreeNode> {
-            const visited = new Set<TreeNode>();
             let next = root;
             while (next) {
-                if (visited.has(next)) {
-                    // Prevent infinite loops when the tree contains cycles.
-                    // eslint-disable-next-line no-console
-                    console.error('TopDownTreeIterator: detected cycle, aborting traversal', next.id);
-                    return;
-                }
-                visited.add(next);
                 yield next;
                 next = doNext(next);
             }
